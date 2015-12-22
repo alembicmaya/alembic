@@ -92,27 +92,6 @@ MObject AlembicNode::mOutTransOpArrayAttr;
 MObject AlembicNode::mOutPropArrayAttr;
 MObject AlembicNode::mOutLocatorPosScaleArrayAttr;
 
-namespace
-{
-    MString UITemplateMELScriptStr(
-"global proc AEAlembicNodeTemplate( string $nodeName )\n"
-"{\n"
-"editorTemplate -beginScrollLayout;\n"
-"editorTemplate -beginLayout \"Alembic Attributes\" -collapse 0;\n"
-"editorTemplate -addControl \"abc_File\";\n"
-"editorTemplate -addControl \"startFrame\";\n"
-"editorTemplate -addControl \"endFrame\";\n"
-"editorTemplate -addControl \"time\";\n"
-"editorTemplate -addControl \"speed\";\n"
-"editorTemplate -addControl \"offset\";\n"
-"editorTemplate -addControl \"cycleType\";\n"
-"editorTemplate -endLayout;\n"
-"AEdependNodeTemplate $nodeName;\n"
-"editorTemplate -addExtraControls;\n"
-"editorTemplate -endScrollLayout;\n}"
-    );
-};
-
 MStatus AlembicNode::initialize()
 {
     MStatus status;
@@ -333,8 +312,6 @@ MStatus AlembicNode::initialize()
     status = attributeAffects(mCycleTypeAttr, mOutCameraArrayAttr);
     status = attributeAffects(mCycleTypeAttr, mOutPropArrayAttr);
     status = attributeAffects(mCycleTypeAttr, mOutLocatorPosScaleArrayAttr);
-
-    MGlobal::executeCommand( UITemplateMELScriptStr );
 
     return status;
 }
