@@ -38,6 +38,7 @@
 #include "AlembicNode.h"
 #include "CreateSceneHelper.h"
 #include "NodeIteratorVisitorHelper.h"
+#include "AbcImportStrings.h"
 
 #include <Alembic/AbcCoreFactory/IFactory.h>
 
@@ -72,7 +73,7 @@
 template <class T>
 void unsupportedWarning(T & iProp)
 {
-    MString warn = "Unsupported attr, skipping: ";
+    MString warn = AbcImportStrings::getString(AbcImportStrings::kWarningUnsupportedAttr) ;
     warn += iProp.getName().c_str();
     warn += " ";
     warn += PODName(iProp.getDataType().getPod());
@@ -1347,7 +1348,7 @@ void addProps(Alembic::Abc::ICompoundProperty & iParent, MObject & iObject,
         else if (propName.empty() || propName[0] == '.' ||
             propName.find('[') != std::string::npos)
         {
-            MString warn = "Skipping oddly named property: ";
+            MString warn = AbcImportStrings::getString(AbcImportStrings::kWarningSkipOddlyNamed) ;
             warn += propName.c_str();
 
             printWarning(warn);
@@ -1359,7 +1360,7 @@ void addProps(Alembic::Abc::ICompoundProperty & iParent, MObject & iObject,
                 Alembic::Abc::IArrayProperty prop(iParent, propName);
                 if (prop.getNumSamples() == 0)
                 {
-                    MString warn = "Skipping property with no samples: ";
+                    MString warn = AbcImportStrings::getString(AbcImportStrings::kWarningSkipNoSamples) ;
                     warn += propName.c_str();
 
                     printWarning(warn);
@@ -2851,7 +2852,7 @@ MString createScene(ArgData & iArgData)
     if (!archive.valid())
     {
         MString theError = iArgData.mFileName;
-        theError += MString(" not a valid Alembic file.");
+        theError += MString( " " + AbcImportStrings::getString(AbcImportStrings::kErrorInvalidAlembic) );
         printError(theError);
         return returnName;
     }
@@ -3014,7 +3015,7 @@ MString connectAttr(ArgData & iArgData)
                 theError += i;
                 theError += "] --> ";
                 theError += mFn.name();
-                theError += ".inMesh connection not made";
+                theError += ".inMesh " + AbcImportStrings::getString(AbcImportStrings::kErrorConnectionNotMade);
                 printError(theError);
             }
         }
@@ -3180,7 +3181,7 @@ MString connectAttr(ArgData & iArgData)
                     != attrName.c_str()))
                 {
                     MString theError(attrName.c_str());
-                    theError += MString(" not found for connection");
+                    theError += MString(" " + AbcImportStrings::getString(AbcImportStrings::kErrorConnectionNotFound));
                     printError(theError);
                     continue;
                 }
@@ -3198,7 +3199,7 @@ MString connectAttr(ArgData & iArgData)
                     MString theError(srcPlug.name());
                     theError += MString(" --> ");
                     theError += dstPlug.name();
-                    theError += MString(" connection not made");
+                    theError += MString(" " + AbcImportStrings::getString(AbcImportStrings::kErrorConnectionNotMade));
                     printError(theError);
                 }
             }
@@ -3207,7 +3208,7 @@ MString connectAttr(ArgData & iArgData)
 
     if (particleSize > 0)
     {
-        printWarning("Currently no support for animated particle system");
+        printWarning(AbcImportStrings::getString(AbcImportStrings::kWarningNoAnimatedParticleSupport));
     }
 
     if (nSurfaceSize > 0)

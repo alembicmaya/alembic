@@ -38,6 +38,7 @@ PROJECT( ABC_IMPORT_MAYA_MODULE )
 
 SET( H_FILES
   AbcImport.h
+  AbcImportStrings.h
   AlembicImportFileTranslator.h
   AlembicNode.h
   CameraHelper.h
@@ -54,6 +55,7 @@ SET( H_FILES
 
 SET( CXX_FILES
   AbcImport.cpp
+  AbcImportStrings.cpp
   AlembicImportFileTranslator.cpp
   AlembicNode.cpp
   CameraHelper.cpp
