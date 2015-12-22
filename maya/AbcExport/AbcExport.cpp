@@ -1078,6 +1078,8 @@ ALEMBIC_MAYA_PLUGIN_EXPORT  MStatus initializePlugin(MObject obj)
         status.perror("registerCommand");
     }
 
+    MGlobal::executeCommandOnIdle("AlembicCreateUI");
+
     MString info = "AbcExport v";
     info += ABCEXPORT_VERSION;
     info += " using ";
@@ -1097,6 +1099,8 @@ ALEMBIC_MAYA_PLUGIN_EXPORT MStatus uninitializePlugin(MObject obj)
     {
         status.perror("deregisterCommand");
     }
+
+    MGlobal::executeCommandOnIdle("AlembicDeleteUI");
 
     return status;
 }
