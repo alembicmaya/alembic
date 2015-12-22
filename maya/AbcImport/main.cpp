@@ -36,6 +36,7 @@
 
 #include "AlembicNode.h"
 #include "AbcImport.h"
+#include "AbcImportStrings.h"
 #include "AlembicImportFileTranslator.h"
 #include "Export.h"
 
@@ -53,6 +54,10 @@ ALEMBIC_MAYA_PLUGIN_EXPORT MStatus initializePlugin(MObject obj)
     MFnPlugin plugin(obj, "Alembic", pluginVersion, "Any");
 
     MStatus status;
+
+    // Register string resources
+    //
+    plugin.registerUIStrings( AbcImportStrings::registerMStringResources, "AbcImportInitStrings" ) ;
 
     status = plugin.registerCommand("AbcImport",
                                 AbcImport::creator,
