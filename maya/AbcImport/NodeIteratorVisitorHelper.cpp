@@ -2906,6 +2906,8 @@ MString createScene(ArgData & iArgData)
         visitor.applyShaderSelection();
     }
 
+    visitor.addFaceSetsAfterConnection();
+
     return returnName;
 }
 
