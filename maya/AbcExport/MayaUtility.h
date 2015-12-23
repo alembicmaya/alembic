@@ -166,6 +166,7 @@ struct JobArgs
         writeUVs = false;
         writeColorSets = false;
         writeFaceSets = false;
+        writeUVSets = false;
         writeCreases = false;
     }
 
@@ -179,6 +180,7 @@ struct JobArgs
     bool writeUVs;
     bool writeColorSets;
     bool writeFaceSets;
+    bool writeUVSets;
     bool writeCreases;
 
     std::string melPerFrameCallback;

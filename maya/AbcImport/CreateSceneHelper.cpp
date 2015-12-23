@@ -107,8 +107,8 @@ namespace
 
         // Remove the elements from all other sets (exclusivity constraint)
         MObjectArray   connSGObjs( getOutConnectedSG(dpShape) );
-        MObject	   connSGObj;
-        MFnSet	   fnOtherSet;
+        MObject connSGObj;
+        MFnSet fnOtherSet;
         MSelectionList setList, otherSetList, xorList;
         setList.add( dpShape, comp );
         int nSG = connSGObjs.length();
@@ -193,7 +193,7 @@ namespace
                     shadingGroup = createShadingGroup(faceSetName);
                 }
 
-                // set (and create if needed) 'AbcFacesetName' string 
+                // set (and create if needed) 'AbcFacesetName' string
                 // attribute on the shadingGroup
                 MFnDependencyNode fnDepNode(shadingGroup);
                 MPlug abcFacesetNamePlug = fnDepNode.findPlug("AbcFacesetName",
@@ -205,9 +205,9 @@ namespace
                     MObject strAttrObject = fnStringData.create("");
 
                     MFnTypedAttribute attr;
-                    MObject attrObj = attr.create(attrName, attrName, 
+                    MObject attrObj = attr.create(attrName, attrName,
                                               MFnData::kString, strAttrObject);
-                    fnDepNode.addAttribute(attrObj, 
+                    fnDepNode.addAttribute(attrObj,
                                          MFnDependencyNode::kLocalDynamicAttr);
                     abcFacesetNamePlug = fnDepNode.findPlug(attrObj, true);
                 }
@@ -1093,8 +1093,8 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)
     MStatus status = MS::kSuccess;
     MObject subDObj = MObject::kNullObj;
 
-    SubDAndColors subdColors;
-    subdColors.mMesh = iNode;
+    SubDAndFriends subdAndFriends;
+    subdAndFriends.mMesh = iNode;
 
     Alembic::Abc::ICompoundProperty arbProp =
         iNode.getSchema().getArbGeomParams();
@@ -1102,15 +1102,16 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)
     Alembic::Abc::ICompoundProperty userProp =
         iNode.getSchema().getUserProperties();
 
-    bool colorAnim = getColorAttrs(arbProp, subdColors.mC3s,
-        subdColors.mC4s, mUnmarkedFaceVaryingColors);
+    bool colorAnim = getUVandColorAttrs(arbProp, subdAndFriends.mV2s,
+        subdAndFriends.mC3s, subdAndFriends.mC4s,
+        mUnmarkedFaceVaryingColors);
 
     bool isConstant = iNode.getSchema().isConstant();
 
     // add animated SubDs to the list
     if (!isConstant || colorAnim)
     {
-        mData.mSubDList.push_back(subdColors);
+        mData.mSubDList.push_back(subdAndFriends);
     }
 
     std::size_t firstProp = mData.mPropList.size();
@@ -1136,7 +1137,7 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)
 
     if (!hasDag && (mAction == CREATE || mAction == CREATE_REMOVE))
     {
-        subDObj = createSubD(mFrame, subdColors, mParent);
+        subDObj = createSubD(mFrame, subdAndFriends, mParent);
         if (!isConstant || colorAnim)
         {
             mData.mSubDObjList.push_back(subDObj);
@@ -1192,7 +1193,7 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)
             if (ioFn.object().hasFn(MFn::kMesh))
                 connectIntermediateMesh(ioFn, fn);
             else
-                readSubD(mFrame, fn, subDObj, subdColors, false);
+                readSubD(mFrame, fn, subDObj, subdAndFriends, false);
         }
         addToPropList(firstProp, subDObj);
     }
@@ -1210,8 +1211,8 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)
     MStatus status = MS::kSuccess;
     MObject polyObj = MObject::kNullObj;
 
-    PolyMeshAndColors meshColors;
-    meshColors.mMesh = iNode;
+    PolyMeshAndFriends meshAndFriends;
+    meshAndFriends.mMesh = iNode;
 
     bool isConstant = iNode.getSchema().isConstant();
 
@@ -1221,12 +1222,13 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)
     Alembic::Abc::ICompoundProperty userProp =
         iNode.getSchema().getUserProperties();
 
-    bool colorAnim = getColorAttrs(arbProp, meshColors.mC3s,
-        meshColors.mC4s, mUnmarkedFaceVaryingColors);
+    bool colorAnim = getUVandColorAttrs(arbProp, meshAndFriends.mV2s,
+        meshAndFriends.mC3s, meshAndFriends.mC4s,
+        mUnmarkedFaceVaryingColors);
 
     // add animated poly mesh to the list
     if (!isConstant || colorAnim)
-        mData.mPolyMeshList.push_back(meshColors);
+        mData.mPolyMeshList.push_back(meshAndFriends);
 
     std::size_t firstProp = mData.mPropList.size();
     getAnimatedProps(arbProp, mData.mPropList, mUnmarkedFaceVaryingColors);
@@ -1250,7 +1252,7 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)
 
     if (!hasDag && (mAction == CREATE || mAction == CREATE_REMOVE))
     {
-        polyObj = createPoly(mFrame, meshColors, mParent);
+        polyObj = createPoly(mFrame, meshAndFriends, mParent);
         if (!isConstant || colorAnim)
         {
             mData.mPolyMeshObjList.push_back(polyObj);
@@ -1304,7 +1306,7 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)
             if (ioFn.object().hasFn(MFn::kMesh))
                 connectIntermediateMesh(ioFn, fn);
             else
-                readPoly(mFrame, fn, polyObj, meshColors, false);
+                readPoly(mFrame, fn, polyObj, meshAndFriends, false);
         }
         addToPropList(firstProp, polyObj);
     }
