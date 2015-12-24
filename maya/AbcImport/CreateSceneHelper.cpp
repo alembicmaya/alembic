@@ -1178,7 +1178,7 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::ISubD& iNode)
         if (isConstant && fn.isFromReferencedFile())
         {
             deleteIntermediateMesh(fn);
-            ioFn.setObject(createSubD(mFrame, subdColors, mParent));
+            ioFn.setObject(createSubD(mFrame, subdAndFriends, mParent));
         }
 
         if (mConnectDagNode.isValid())
@@ -1293,7 +1293,7 @@ MStatus CreateSceneVisitor::operator()(Alembic::AbcGeom::IPolyMesh& iNode)
         if (isConstant && fn.isFromReferencedFile())
         {
             deleteIntermediateMesh(fn);
-            ioFn.setObject(createPoly(mFrame, meshColors, mParent));
+            ioFn.setObject(createPoly(mFrame, meshAndFriends, mParent));
         }
 
         if (mConnectDagNode.isValid())
