@@ -329,7 +329,7 @@ namespace
                 for (int v = numVertices - 1; v >= 0; v--, ++nIndex)
                 {
                     uvIds[nIndex] =
-                        (int)(*iSampIndices)[vertexList[v]];
+                        (int)(*iSampIndices)[vertexList[numVertices - v - 1]];
                 }
             }
         }
