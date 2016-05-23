@@ -725,7 +725,18 @@ MStatus AlembicNode::compute(const MPlug & plug, MDataBlock & dataBlock)
     {
         if (mOutRead[2])
         {
-            dataBlock.setClean(plug);
+            // Reference the output to let EM know we are the writer
+            // of the data. EM sets the output to holder and causes
+            // race condition when evaluating fan-out destinations.
+            MArrayDataHandle outArrayHandle =
+                dataBlock.outputValue(mOutSubDArrayAttr, &status);
+            const unsigned int elementCount = outArrayHandle.elementCount();
+            for (unsigned int j = 0; j < elementCount; j++)
+            {
+                outArrayHandle.outputValue().data();
+                outArrayHandle.next();
+            }
+            outArrayHandle.setAllClean();
             return MS::kSuccess;
         }
 
@@ -800,7 +811,18 @@ MStatus AlembicNode::compute(const MPlug & plug, MDataBlock & dataBlock)
     {
         if (mOutRead[3])
         {
-            dataBlock.setClean(plug);
+            // Reference the output to let EM know we are the writer
+            // of the data. EM sets the output to holder and causes
+            // race condition when evaluating fan-out destinations.
+            MArrayDataHandle outArrayHandle =
+                dataBlock.outputValue(mOutPolyArrayAttr, &status);
+            const unsigned int elementCount = outArrayHandle.elementCount();
+            for (unsigned int j = 0; j < elementCount; j++)
+            {
+                outArrayHandle.outputValue().data();
+                outArrayHandle.next();
+            }
+            outArrayHandle.setAllClean();
             return MS::kSuccess;
         }
 
@@ -948,7 +970,18 @@ MStatus AlembicNode::compute(const MPlug & plug, MDataBlock & dataBlock)
     {
         if (mOutRead[5])
         {
-            dataBlock.setClean(plug);
+            // Reference the output to let EM know we are the writer
+            // of the data. EM sets the output to holder and causes
+            // race condition when evaluating fan-out destinations.
+            MArrayDataHandle outArrayHandle =
+                dataBlock.outputValue(mOutNurbsSurfaceArrayAttr, &status);
+            const unsigned int elementCount = outArrayHandle.elementCount();
+            for (unsigned int j = 0; j < elementCount; j++)
+            {
+                outArrayHandle.outputValue().data();
+                outArrayHandle.next();
+            }
+            outArrayHandle.setAllClean();
             return MS::kSuccess;
         }
 
@@ -987,7 +1020,18 @@ MStatus AlembicNode::compute(const MPlug & plug, MDataBlock & dataBlock)
     {
         if (mOutRead[6])
         {
-            dataBlock.setClean(plug);
+            // Reference the output to let EM know we are the writer
+            // of the data. EM sets the output to holder and causes
+            // race condition when evaluating fan-out destinations.
+            MArrayDataHandle outArrayHandle =
+                dataBlock.outputValue(mOutNurbsCurveGrpArrayAttr, &status);
+            const unsigned int elementCount = outArrayHandle.elementCount();
+            for (unsigned int j = 0; j < elementCount; j++)
+            {
+                outArrayHandle.outputValue().data();
+                outArrayHandle.next();
+            }
+            outArrayHandle.setAllClean();
             return MS::kSuccess;
         }
 
