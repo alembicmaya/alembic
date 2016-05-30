@@ -478,7 +478,7 @@ AtNode * ProcessPolyMeshBase(
                                 faceVisArray ) );
             }
             
-            delete[] faceVisArray;
+            delete faceVisArray;
         }
     }
     
